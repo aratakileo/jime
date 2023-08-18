@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "japanese_ime",
+  "version": "${version}",
+  "name": "Japanese IME",
+  "description": "The mod adds an IME for the Japanese language to the game",
+  "authors": [
+    "Arataki Leo"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/japanese-ime",
+    "sources": "https://github.com/aratakileo/japanese-ime",
+    "issues": "https://github.com/aratakileo/japanese-ime/issues"
+  },
+  "license": "GPL-3.0",
+  "icon": "assets/japaneseime/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "io.github.aratakileo.japaneseime.JapaneseIME"
+    ]
+  },
+  "mixins": [
+    "japaneseime.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
