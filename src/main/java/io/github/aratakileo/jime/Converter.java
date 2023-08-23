@@ -1,4 +1,4 @@
-package io.github.aratakileo.japaneseime;
+package io.github.aratakileo.jime;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class RomajiToHiraganaConverter {
+public class Converter {
     public final static Pattern SPECIAL_LITERALS_PATTERN = Pattern.compile("\\.{3}|[-,.?!<>(){}&\"'\\[\\]]"),
             ROMAJI_LITERALS_PATTERN = Pattern.compile("[a-zA-z]+");
     private final static LinkedHashMap<String, List<String>> SPECIAL_LITERALS = new LinkedHashMap<>() {{

@@ -1,27 +1,27 @@
 {
   "schemaVersion": 1,
-  "id": "japanese_ime",
+  "id": "jime",
   "version": "${version}",
-  "name": "Japanese IME",
+  "name": "Japanese IME (JIME)",
   "description": "The mod adds an IME for the Japanese language to the game",
   "authors": [
     "Arataki Leo"
   ],
   "contact": {
-    "homepage": "https://modrinth.com/mod/japanese-ime",
-    "sources": "https://github.com/aratakileo/japanese-ime",
-    "issues": "https://github.com/aratakileo/japanese-ime/issues"
+    "homepage": "https://modrinth.com/mod/jime",
+    "sources": "https://github.com/aratakileo/jime",
+    "issues": "https://github.com/aratakileo/jime/issues"
   },
   "license": "GPL-3.0",
-  "icon": "assets/japaneseime/icon.png",
+  "icon": "assets/jime/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "io.github.aratakileo.japaneseime.JapaneseIME"
+      "io.github.aratakileo.jime.Jime"
     ]
   },
   "mixins": [
-    "japaneseime.mixins.json"
+    "jime.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
