@@ -1,7 +1,8 @@
-package io.github.aratakileo.jime;
+package io.github.aratakileo.jime.converter;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -330,11 +331,11 @@ public class HiraganaConverter {
         ArrayUtils.reverse(HIRAGANA_LITERALS);
     }
 
-    public static String convert(String romajiLiterals) {
+    public static String convert(@NotNull String romajiLiterals) {
         return StringUtils.replaceEach(romajiLiterals, ROMAJI_LITERALS, HIRAGANA_LITERALS);
     }
 
-    public static List<String> getVariations(String specialLiteral) {
+    public static List<String> getVariations(@NotNull String specialLiteral) {
         return SPECIAL_LITERALS.get(specialLiteral);
     }
 }

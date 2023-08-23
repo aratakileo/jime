@@ -1,11 +1,11 @@
 package io.github.aratakileo.jime.mixin;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.suggestion.Suggestions;
-import io.github.aratakileo.jime.HiraganaConverter;
+import io.github.aratakileo.jime.converter.HiraganaConverter;
 import io.github.aratakileo.jime.SuggestionsBuilder;
+import io.github.aratakileo.jime.converter.KanjiConverter;
 import net.minecraft.client.gui.components.CommandSuggestions;
 import net.minecraft.client.gui.components.EditBox;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import oshi.util.tuples.Pair;
 
+import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
@@ -56,11 +57,14 @@ public class CommandSuggestionsMixin {
 
         final var romajiLiterals = contentText.substring(patternBounds.getA(), cursorPosition);
         final var hiraganaLiterals = HiraganaConverter.convert(romajiLiterals);
-        final var suggestions = Lists.newArrayList(hiraganaLiterals);
+        final var suggestionsBuilder = new SuggestionsBuilder(textUptoCursor, patternBounds.getA());
+        final var suggestions = new ArrayList<>(KanjiConverter.convert(hiraganaLiterals));
 
-        pendingSuggestions = new SuggestionsBuilder(textUptoCursor, patternBounds.getA()) {{
-            for (final var suggestion: suggestions) forcedSuggest(suggestion);
-        }}.buildFuture();
+        suggestions.add(hiraganaLiterals);
+
+        for (final var suggestion: suggestions) suggestionsBuilder.forcedSuggest(suggestion);
+
+        pendingSuggestions = suggestionsBuilder.buildFuture();
 
         pendingSuggestions.thenRun(() -> {
             if (!pendingSuggestions.isDone()) return;
