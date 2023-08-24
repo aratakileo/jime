@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 public class CommandSuggestionsMixin {
     @Unique
     private static final Pattern WHITESPACE_PATTERN = Pattern.compile("(\\s+)"),
+            // `(:)?` is necessary to avoid suggestions conflict with the emogg mod (https://github.com/aratakileo/emogg)
             ROMAJI_LITERALS_PATTERN = Pattern.compile("(:)?[a-zA-Z0-9]+");
 
     @Shadow
