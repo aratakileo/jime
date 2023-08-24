@@ -25,7 +25,8 @@ import java.util.regex.Pattern;
 @Mixin(CommandSuggestions.class)
 public class CommandSuggestionsMixin {
     @Unique
-    private static final Pattern WHITESPACE_PATTERN = Pattern.compile("(\\s+)");
+    private static final Pattern WHITESPACE_PATTERN = Pattern.compile("(\\s+)"),
+            ROMAJI_LITERALS_PATTERN = Pattern.compile("(:)?[a-zA-Z0-9]+");
 
     @Shadow
     @Final
@@ -47,13 +48,17 @@ public class CommandSuggestionsMixin {
         if (hasSlash)
             stringReader.skip();
 
-        if (commandsOnly || hasSlash) return;
+        if (commandsOnly || hasSlash || cursorPosition == 0) return;
 
         final var textUptoCursor = contentText.substring(0, cursorPosition);
-        final var patternBounds = getLastMatchedBounds(HiraganaConverter.ROMAJI_LITERALS_PATTERN);
+        final var patternBounds = getLastMatchedBounds(ROMAJI_LITERALS_PATTERN);
         final var whitespaceEnd = getLastMatchedBounds(WHITESPACE_PATTERN).getB();
 
-        if (patternBounds.getA() == -1 || patternBounds.getB() < whitespaceEnd) return;
+        if (
+                patternBounds.getA() == -1
+                        || patternBounds.getB() <= whitespaceEnd
+                        || textUptoCursor.charAt(patternBounds.getA()) == ':'
+        ) return;
 
         final var romajiLiterals = contentText.substring(patternBounds.getA(), cursorPosition);
         final var hiraganaLiterals = HiraganaConverter.convert(romajiLiterals);

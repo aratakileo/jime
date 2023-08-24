@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class HiraganaConverter {
-    public final static Pattern SPECIAL_LITERALS_PATTERN = Pattern.compile("\\.{3}|[-,.?!<>(){}&\"'\\[\\]]"),
-            ROMAJI_LITERALS_PATTERN = Pattern.compile("[a-zA-z]+");
+    public final static Pattern SPECIAL_LITERALS_PATTERN = Pattern.compile("\\.{3}|[-,.?!<>(){}&\"'\\[\\]]");
     private final static LinkedHashMap<String, List<String>> SPECIAL_LITERALS = new LinkedHashMap<>() {{
         put("-", List.of("ー"));
         put(",", List.of("、"));
