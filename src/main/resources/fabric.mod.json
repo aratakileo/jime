@@ -20,12 +20,10 @@
       "io.github.aratakileo.jime.Jime"
     ]
   },
-  "mixins": [
-    "jime.mixins.json"
-  ],
   "depends": {
     "fabricloader": "*",
     "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": "${minecraft_version}",
+    "suggestions-api": ">=1.0.0"
   }
 }
