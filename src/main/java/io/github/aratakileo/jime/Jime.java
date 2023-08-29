@@ -3,16 +3,13 @@ package io.github.aratakileo.jime;
 import io.github.aratakileo.jime.converter.HiraganaConverter;
 import io.github.aratakileo.jime.converter.KanjiConverter;
 import io.github.aratakileo.suggestionsapi.SuggestionsAPI;
-import io.github.aratakileo.suggestionsapi.suggestion.AlwaysShownSuggestion;
-import io.github.aratakileo.suggestionsapi.suggestion.SimpleSuggestionsInjector;
 import io.github.aratakileo.suggestionsapi.suggestion.Suggestion;
+import io.github.aratakileo.suggestionsapi.suggestion.SuggestionsInjector;
 import net.fabricmc.api.ClientModInitializer;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 public class Jime implements ClientModInitializer {
@@ -20,32 +17,31 @@ public class Jime implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        SuggestionsAPI.registerSuggestionsInjector(
-                new SimpleSuggestionsInjector(Pattern.compile("[A-Za-z0-9]+")) {
-                    @Override
-                    public boolean isIsolated() {
-                        return true;
-                    }
+        SuggestionsAPI.registerSuggestionsInjector(SuggestionsInjector.simple(
+                Pattern.compile("[A-Za-z0-9]+"),
+                (currentExpression, offsettedExpression) -> {
+                    final var hiraganaLiterals = HiraganaConverter.convert(offsettedExpression);
+                    final var output = new ArrayList<Suggestion>(
+                            KanjiConverter.convert(hiraganaLiterals)
+                                    .stream()
+                                    .map(Suggestion::alwaysShown)
+                                    .toList()
+                    );
 
-                    @Override
-                    public <T extends Suggestion> List<T> getUncheckedSuggestions(
-                            @NotNull String currentExpression
-                    ) {
-                        final var hiraganaLiterals = HiraganaConverter.convert(
-                                currentExpression.substring(getStartOffset())
-                        );
-                        final var output = new ArrayList<Suggestion>(
-                                KanjiConverter.convert(hiraganaLiterals)
-                                        .stream()
-                                        .map(AlwaysShownSuggestion::new)
-                                        .toList()
-                        );
+                    output.add(Suggestion.alwaysShown(hiraganaLiterals));
 
-                        output.add(new AlwaysShownSuggestion(hiraganaLiterals));
+                    return output;
+                },
+                true
+        ));
 
-                        return (List<T>) output;
-                    }
-                }
-        );
+        SuggestionsAPI.registerSuggestionsInjector(SuggestionsInjector.simple(
+                Pattern.compile("\\.{3}|[-,.?!<>(){}&\"'\\[\\]]"),
+                (currentExpression, offsettedExpression) -> HiraganaConverter.getVariations(offsettedExpression)
+                        .stream()
+                        .map(Suggestion::alwaysShown)
+                        .toList(),
+                true
+        ));
     }
 }
