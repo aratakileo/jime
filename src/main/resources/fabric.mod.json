@@ -25,5 +25,10 @@
     "fabric": "*",
     "minecraft": "${minecraft_version}",
     "suggestions-api": ">=1.0.0"
-  }
+  },
+  "jars": [
+    {
+      "file": "lib/suggestions-api-${suggestions_api_version}.jar"
+    }
+  ]
 }
