@@ -12,10 +12,10 @@ import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class KanjiConverter {
+public class ImeClient {
     private static final String BASE_URL = "https://www.google.com/transliterate?langpair=ja-Hira%7Cja&text=";
 
-    public static @NotNull List<String> convert(@NotNull String hiragana) {
+    public static @NotNull List<String> getKanjiVariations(@NotNull String hiragana) {
         if (hiragana.isEmpty())
             return List.of();
 

@@ -2,7 +2,7 @@ package io.github.aratakileo.jime;
 
 import com.google.common.collect.Lists;
 import io.github.aratakileo.jime.converter.HiraganaConverter;
-import io.github.aratakileo.jime.converter.KanjiConverter;
+import io.github.aratakileo.jime.converter.ImeClient;
 import io.github.aratakileo.suggestionsapi.SuggestionsAPI;
 import io.github.aratakileo.suggestionsapi.suggestion.Injector;
 import io.github.aratakileo.suggestionsapi.suggestion.Suggestion;
@@ -34,7 +34,7 @@ public class Jime implements ClientModInitializer {
                 Pattern.compile("[A-Za-z0-9]+"),
                 (currentExpression, startOffset, applier) -> () -> {
                     applier.accept(Lists.newArrayList(
-                            KanjiConverter.convert(HiraganaConverter.convert(currentExpression.substring(startOffset)))
+                            ImeClient.getKanjiVariations(HiraganaConverter.convert(currentExpression.substring(startOffset)))
                                     .stream()
                                     .map(Suggestion::alwaysShown)
                                     .toList()
