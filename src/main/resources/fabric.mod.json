@@ -24,11 +24,11 @@
     "fabricloader": "*",
     "fabric": "*",
     "minecraft": "${minecraft_version}",
-    "suggestions-api": ">=1.0.0"
+    "suggestions-api": ">=1.0.1"
   },
   "jars": [
     {
-      "file": "lib/suggestions-api-${suggestions_api_version}+${suggestions_api_support_version}.jar"
+      "file": "lib/suggestions-api-${suggestions_api_version}.jar"
     }
   ]
 }

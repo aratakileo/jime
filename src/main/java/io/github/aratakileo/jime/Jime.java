@@ -1,8 +1,6 @@
 package io.github.aratakileo.jime;
 
-import com.google.common.collect.Lists;
 import io.github.aratakileo.jime.converter.HiraganaConverter;
-import io.github.aratakileo.jime.converter.ImeClient;
 import io.github.aratakileo.suggestionsapi.SuggestionsAPI;
 import io.github.aratakileo.suggestionsapi.injector.Injector;
 import io.github.aratakileo.suggestionsapi.suggestion.Suggestion;
@@ -18,27 +16,7 @@ public class Jime implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        SuggestionsAPI.registerSuggestionsInjector(Injector.simple(
-                Pattern.compile("[A-Za-z0-9]+"),
-                (currentExpression, startOffset) -> Lists.newArrayList(
-                        Suggestion.alwaysShown(
-                                HiraganaConverter.convert(
-                                        currentExpression.substring(startOffset).toLowerCase()
-                                )
-                        )
-                ),
-                true
-        ));
-
-        SuggestionsAPI.registerSuggestionsInjector(Injector.async(
-                Pattern.compile("[A-Za-z0-9]+"),
-                (currentExpression, startOffset) ->
-                        Lists.newArrayList(ImeClient.getKanjiVariations(HiraganaConverter.convert(
-                                currentExpression.substring(startOffset)
-                        )).stream().map(Suggestion::alwaysShown).toList()
-                ),
-                true
-        ));
+        SuggestionsAPI.registerSuggestionsInjector(new JimeInjector());
 
         SuggestionsAPI.registerSuggestionsInjector(Injector.simple(
                 Pattern.compile("\\.{3}|[-,.?!<>(){}&\"'\\[\\]]"),
