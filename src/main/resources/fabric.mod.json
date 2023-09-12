@@ -28,7 +28,7 @@
   },
   "jars": [
     {
-      "file": "lib/suggestions-api-${suggestions_api_version}.jar"
+      "file": "lib/suggestions-api-${suggestions_api_version}+${suggestions_api_support_version}.jar"
     }
   ]
 }

@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import io.github.aratakileo.jime.converter.HiraganaConverter;
 import io.github.aratakileo.jime.converter.ImeClient;
 import io.github.aratakileo.suggestionsapi.SuggestionsAPI;
-import io.github.aratakileo.suggestionsapi.suggestion.Injector;
+import io.github.aratakileo.suggestionsapi.injector.Injector;
 import io.github.aratakileo.suggestionsapi.suggestion.Suggestion;
 import io.github.aratakileo.suggestionsapi.util.Cast;
 import net.fabricmc.api.ClientModInitializer;
@@ -32,14 +32,11 @@ public class Jime implements ClientModInitializer {
 
         SuggestionsAPI.registerSuggestionsInjector(Injector.async(
                 Pattern.compile("[A-Za-z0-9]+"),
-                (currentExpression, startOffset, applier) -> () -> {
-                    applier.accept(Lists.newArrayList(
-                            ImeClient.getKanjiVariations(HiraganaConverter.convert(currentExpression.substring(startOffset)))
-                                    .stream()
-                                    .map(Suggestion::alwaysShown)
-                                    .toList()
-                    ));
-                },
+                (currentExpression, startOffset) ->
+                        Lists.newArrayList(ImeClient.getKanjiVariations(HiraganaConverter.convert(
+                                currentExpression.substring(startOffset)
+                        )).stream().map(Suggestion::alwaysShown).toList()
+                ),
                 true
         ));
 
