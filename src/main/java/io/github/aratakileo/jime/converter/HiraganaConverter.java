@@ -4,6 +4,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -31,6 +32,9 @@ public class HiraganaConverter {
 
     static {
         final var HIRAGANA = new LinkedHashMap<String, String>() {{
+            put("n", "ん");
+            put("nn", "ん");
+            put("xn", "ん");
             put("a", "あ");
             put("i", "い");
             put("yi", "い");
@@ -308,10 +312,6 @@ public class HiraganaConverter {
             put("wo", "を");
             put("lwa", "ゎ");
             put("xwa", "ゎ");
-            put("n", "ん");
-            put("nn", "ん");
-            put("n'", "ん");
-            put("xn", "ん");
 
             for (final var entry: new LinkedHashMap<>(this).entrySet()) {
                 final var romajiLiteral = entry.getKey();
