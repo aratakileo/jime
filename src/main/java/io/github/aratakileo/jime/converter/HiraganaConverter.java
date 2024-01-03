@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class HiraganaConverter {
     private final static LinkedHashMap<String, List<String>> SPECIAL_LITERALS = new LinkedHashMap<>() {{

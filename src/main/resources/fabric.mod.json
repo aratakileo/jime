@@ -23,8 +23,8 @@
   "depends": {
     "fabricloader": "*",
     "fabric": "*",
-    "minecraft": "${minecraft_version}",
-    "suggestions-api": ">=1.0.1"
+    "minecraft": "*",
+    "suggestions-api": ">=1.0.3"
   },
   "jars": [
     {

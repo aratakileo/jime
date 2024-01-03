@@ -16,9 +16,9 @@ public class Jime implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        SuggestionsAPI.registerSuggestionsInjector(new JimeInjector());
+        SuggestionsAPI.registerInjector(new JimeInjector());
 
-        SuggestionsAPI.registerSuggestionsInjector(Injector.simple(
+        SuggestionsAPI.registerInjector(Injector.simple(
                 Pattern.compile("\\.{3}|[-,.?!<>(){}&\"'\\[\\]]"),
                 (currentExpression, startOffset) -> Cast.of(
                         HiraganaConverter.getVariations(currentExpression.substring(startOffset))

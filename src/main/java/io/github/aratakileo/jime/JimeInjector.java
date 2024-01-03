@@ -20,17 +20,17 @@ public class JimeInjector implements SuggestionsInjector, AsyncInjector {
 
     @Override
     public @Nullable List<Suggestion> getSuggestions(@NotNull String currentExpression) {
-        int lastMatchedStart = Injector.getLastMatchedStart(Injector.SIMPLE_WORD_PATTERN, currentExpression);
+        final var matcher = Injector.SIMPLE_WORD_PATTERN.matcher(currentExpression);
 
         shouldShowSuggestions = false;
 
-        if (lastMatchedStart == -1) return null;
+        if (!matcher.find()) return null;
 
         shouldShowSuggestions = true;
-        startOffset = lastMatchedStart;
+        startOffset = matcher.start();
 
         return List.of(Suggestion.alwaysShown(
-                HiraganaConverter.convert(currentExpression.substring(lastMatchedStart).toLowerCase())
+                HiraganaConverter.convert(currentExpression.substring(startOffset).toLowerCase())
         ));
     }
 
