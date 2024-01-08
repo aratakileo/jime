@@ -21,14 +21,6 @@
     ]
   },
   "depends": {
-    "fabricloader": "*",
-    "fabric": "*",
-    "minecraft": "*",
-    "suggestions-api": ">=1.0.3"
-  },
-  "jars": [
-    {
-      "file": "lib/suggestions-api-${suggestions_api_version}.jar"
-    }
-  ]
+    "suggestions-api": ">=${suggestions_api_version}"
+  }
 }

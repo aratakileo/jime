@@ -3,28 +3,9 @@ plugins {
     id 'maven-publish'
 }
 
-final var supportMinecraftVersion = project.hasProperty("support_minecraft_version")
-        ? project.support_minecraft_version : project.minecraft_version
+apply from: 'util.gradle'
 
-version = "${project.mod_version}+${supportMinecraftVersion}"
 group = project.maven_group
-
-repositories {
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
-
-    maven {
-        name = "Modrinth"
-        url = "https://api.modrinth.com/maven"
-    }
-}
-
-configurations {
-    extraLibs
-}
 
 dependencies {
     // To change the versions see the gradle.properties file
@@ -34,24 +15,17 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation "maven.modrinth:suggestions-api:${project.suggestions_api_version}"
-    extraLibs "maven.modrinth:suggestions-api:${project.suggestions_api_version}"
+    implEmbeddedMod "maven.modrinth:suggestions-api:${project.suggestions_api_version}"
 }
 
 processResources {
     inputs.property "version", project.version
-    inputs.property "minecraft_version", project.minecraft_version
-    inputs.property "loader_version", project.loader_version
     inputs.property "suggestions_api_version", project.suggestions_api_version
-    inputs.property "support_minecraft_version", project.support_minecraft_version
     filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version,
-                "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version,
-                "suggestions_api_version": project.suggestions_api_version,
-                "support_minecraft_version": project.support_minecraft_version
+                "suggestions_api_version": project.suggestions_api_version
     }
 }
 
@@ -82,10 +56,6 @@ java {
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}"}
-    }
-
-    into("lib") {
-        from configurations.extraLibs
     }
 }
 
