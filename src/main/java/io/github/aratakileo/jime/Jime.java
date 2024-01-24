@@ -20,13 +20,12 @@ public class Jime implements ClientModInitializer {
 
         SuggestionsAPI.registerInjector(Injector.simple(
                 Pattern.compile("\\.{3}|[-,.?!<>(){}&\"'\\[\\]]"),
-                (currentExpression, startOffset) -> Cast.of(
-                        HiraganaConverter.getVariations(currentExpression.substring(startOffset))
+                (stringContainer, startOffset) -> Cast.of(
+                        HiraganaConverter.getVariations(stringContainer.getContent().substring(startOffset))
                                 .stream()
                                 .map(Suggestion::alwaysShown)
                                 .toList()
-                ),
-                true
+                )
         ));
     }
 }

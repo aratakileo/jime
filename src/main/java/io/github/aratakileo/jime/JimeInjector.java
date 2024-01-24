@@ -7,6 +7,7 @@ import io.github.aratakileo.suggestionsapi.injector.AsyncInjector;
 import io.github.aratakileo.suggestionsapi.injector.Injector;
 import io.github.aratakileo.suggestionsapi.injector.SuggestionsInjector;
 import io.github.aratakileo.suggestionsapi.suggestion.Suggestion;
+import io.github.aratakileo.suggestionsapi.util.StringContainer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,8 +20,8 @@ public class JimeInjector implements SuggestionsInjector, AsyncInjector {
     private boolean shouldShowSuggestions = true;
 
     @Override
-    public @Nullable List<Suggestion> getSuggestions(@NotNull String currentExpression) {
-        final var matcher = Injector.SIMPLE_WORD_PATTERN.matcher(currentExpression);
+    public @Nullable List<Suggestion> getSuggestions(@NotNull StringContainer stringContainer) {
+        final var matcher = Injector.SIMPLE_WORD_PATTERN.matcher(stringContainer.getContent());
 
         shouldShowSuggestions = false;
 
@@ -30,16 +31,16 @@ public class JimeInjector implements SuggestionsInjector, AsyncInjector {
         startOffset = matcher.start();
 
         return List.of(Suggestion.alwaysShown(
-                HiraganaConverter.convert(currentExpression.substring(startOffset).toLowerCase())
+                HiraganaConverter.convert(stringContainer.getContent().substring(startOffset).toLowerCase())
         ));
     }
 
     @Override
-    public @Nullable Supplier<@Nullable List<Suggestion>> getAsyncApplier(@NotNull String currentExpression) {
+    public @Nullable Supplier<@Nullable List<Suggestion>> getAsyncApplier(@NotNull StringContainer stringContainer) {
         if (!shouldShowSuggestions) return null;
 
         return () -> {
-            final var answeredHashMap = ImeClient.getRequestAnswer(currentExpression.substring(startOffset));
+            final var answeredHashMap = ImeClient.getRequestAnswer(stringContainer.getContent().substring(startOffset));
 
             if (Objects.isNull(answeredHashMap)) return List.of();
 
