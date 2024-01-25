@@ -17,14 +17,15 @@ import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 public class JimeInjector implements SuggestionsInjector, AsyncInjector {
+    private final Pattern SPECIAL_LITERAL_PATTERN = Pattern.compile("\\.{3}|[-,.?!<>(){}&\"'\\[\\]]$");
+
     private int startOffset = 0;
     private boolean isPhraseFound = true;
 
     @Override
     public @Nullable List<Suggestion> getSuggestions(@NotNull StringContainer stringContainer) {
         final var phraseMatcher = Injector.SIMPLE_WORD_PATTERN.matcher(stringContainer.getContent());
-        final var specialLiteralMatcher = Pattern.compile("\\.{3}|[-,.?!<>(){}&\"'\\[\\]]$")
-                .matcher(stringContainer.getContent());
+        final var specialLiteralMatcher = SPECIAL_LITERAL_PATTERN.matcher(stringContainer.getContent());
         final var isSpecialLiteralFound = specialLiteralMatcher.find();
 
         isPhraseFound = phraseMatcher.find();
