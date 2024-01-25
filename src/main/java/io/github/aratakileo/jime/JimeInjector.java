@@ -14,30 +14,44 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 public class JimeInjector implements SuggestionsInjector, AsyncInjector {
     private int startOffset = 0;
-    private boolean shouldShowSuggestions = true;
+    private boolean isPhraseFound = true;
 
     @Override
     public @Nullable List<Suggestion> getSuggestions(@NotNull StringContainer stringContainer) {
-        final var matcher = Injector.SIMPLE_WORD_PATTERN.matcher(stringContainer.getContent());
+        final var phraseMatcher = Injector.SIMPLE_WORD_PATTERN.matcher(stringContainer.getContent());
+        final var specialLiteralMatcher = Pattern.compile("\\.{3}|[-,.?!<>(){}&\"'\\[\\]]$")
+                .matcher(stringContainer.getContent());
+        final var isSpecialLiteralFound = specialLiteralMatcher.find();
 
-        shouldShowSuggestions = false;
+        isPhraseFound = phraseMatcher.find();
 
-        if (!matcher.find()) return null;
+        if (isPhraseFound) {
+            startOffset = phraseMatcher.start();
 
-        shouldShowSuggestions = true;
-        startOffset = matcher.start();
+            return List.of(Suggestion.alwaysShown(
+                    HiraganaConverter.convert(phraseMatcher.group().toLowerCase())
+            ));
+        }
 
-        return List.of(Suggestion.alwaysShown(
-                HiraganaConverter.convert(stringContainer.getContent().substring(startOffset).toLowerCase())
-        ));
+        if (isSpecialLiteralFound) {
+            startOffset = specialLiteralMatcher.start();
+
+            return HiraganaConverter.getVariations(specialLiteralMatcher.group())
+                    .stream()
+                    .map(Suggestion::alwaysShown)
+                    .toList();
+        }
+
+        return null;
     }
 
     @Override
     public @Nullable Supplier<@Nullable List<Suggestion>> getAsyncApplier(@NotNull StringContainer stringContainer) {
-        if (!shouldShowSuggestions) return null;
+        if (!isPhraseFound) return null;
 
         return () -> {
             final var answeredHashMap = ImeClient.getRequestAnswer(stringContainer.getContent().substring(startOffset));
