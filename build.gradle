@@ -15,7 +15,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    implEmbeddedMod "maven.modrinth:suggestions-api:${project.suggestions_api_version}"
+    implEmbeddedMod "maven.modrinth:suggestions-api:${project.suggestions_api_version}+fabric"
 }
 
 processResources {
